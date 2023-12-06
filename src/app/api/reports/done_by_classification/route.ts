@@ -14,8 +14,6 @@ const fields = [
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const jql = searchParams.get("jql");
-  console.log("done_by_classification:");
-  console.log(searchParams);
 
   if (!jql) {
     return NextResponse.json(
@@ -52,7 +50,6 @@ export async function GET(req: NextRequest) {
       }
     );
   } catch (err) {
-    console.log(err);
     return NextResponse.json(
       {
         status: "Error",
