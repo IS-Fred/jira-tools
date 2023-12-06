@@ -2,9 +2,6 @@ import Jira, { CUSTOM_FIELD_NAMES } from "../../../utils/Jira";
 
 import { NextRequest, NextResponse } from "next/server";
 
-const JQL =
-  'project = PAYG AND resolution = Done AND type = Story AND resolutiondate >= "2023/11/01"  resolutiondate <= "2023/11/30"';
-
 const fields = [
   CUSTOM_FIELD_NAMES["StoryPoints"],
   CUSTOM_FIELD_NAMES["Classification"],
@@ -31,12 +28,21 @@ export async function GET(req: NextRequest) {
     const issues = await Jira.searchJira(jql, { fields: fields });
     const storyPointsByClassification = issues.issues.reduce(
       // @ts-ignore
-      (ret, cur) => ({
-        ...ret,
-        [cur.fields[CUSTOM_FIELD_NAMES["Classification"]].value]:
-          ret[cur.fields[CUSTOM_FIELD_NAMES["Classification"]].value] +
-          cur.fields[CUSTOM_FIELD_NAMES["StoryPoints"]],
-      }),
+      (ret, cur) => {
+        if (
+          !cur.fields[CUSTOM_FIELD_NAMES["Classification"]] ||
+          !cur.fields[CUSTOM_FIELD_NAMES["StoryPoints"]]
+        ) {
+          return ret;
+        } else {
+          return {
+            ...ret,
+            [cur.fields[CUSTOM_FIELD_NAMES["Classification"]].value]:
+              ret[cur.fields[CUSTOM_FIELD_NAMES["Classification"]].value] +
+              cur.fields[CUSTOM_FIELD_NAMES["StoryPoints"]],
+          };
+        }
+      },
       { Product: 0, "Tech debt": 0, Support: 0, Compliance: 0, Bug: 0 }
     );
 
