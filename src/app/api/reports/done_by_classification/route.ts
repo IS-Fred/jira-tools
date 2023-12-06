@@ -1,9 +1,9 @@
 import Jira, { CUSTOM_FIELD_NAMES } from "../../../utils/Jira";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const JQL =
-  'project = PAYG AND resolution = Done AND type = Story AND resolutiondate >= "2023/11/01" AND resolutiondate <= "2023/11/30"';
+  'project = PAYG AND resolution = Done AND type = Story AND resolutiondate >= "2023/11/01"  resolutiondate <= "2023/11/30"';
 
 const fields = [
   CUSTOM_FIELD_NAMES["StoryPoints"],
@@ -11,12 +11,26 @@ const fields = [
   "summary",
 ];
 
-export async function GET(
-  req: Request,
-  { params }: { params: { accountId: string } }
-) {
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const jql = searchParams.get("jql");
+  console.log("done_by_classification:");
+  console.log(searchParams);
+
+  if (!jql) {
+    return NextResponse.json(
+      {
+        status: "Error",
+        error: "'jql' parameter is required",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
   try {
-    const issues = await Jira.searchJira(JQL, { fields: fields });
+    const issues = await Jira.searchJira(jql, { fields: fields });
     const storyPointsByClassification = issues.issues.reduce(
       // @ts-ignore
       (ret, cur) => ({
@@ -38,13 +52,13 @@ export async function GET(
       }
     );
   } catch (err) {
-    console.log("***** ERROR *****");
-    console.error(err);
-
+    console.log(err);
     return NextResponse.json(
       {
         status: "Error",
-        error: err,
+        jql: jql,
+        // @ts-ignore
+        error: JSON.parse(err.message).errorMessages,
       },
       {
         status: 500,
