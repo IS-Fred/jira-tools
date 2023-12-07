@@ -2,6 +2,7 @@
 
 import Select from "react-select";
 
+import { DonutChart } from "@/app/components/donut-chart";
 import { PieChart } from "@/app/components/pie-chart";
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
@@ -16,8 +17,8 @@ export default function DoneByClassification() {
   const [data, setData] = useState<any>();
   const [projects, setProjects] = useState<SelectOptionType[]>([]);
   const [project, setProject] = useState<string | undefined>();
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>();
+  const [endDate, setEndDate] = useState<Date | null>();
 
   const fetchProjectList = async () => {
     const response = await fetch("/api/list-projects");
@@ -43,44 +44,47 @@ export default function DoneByClassification() {
 
   // <main className="flex min-h-screen flex-col items-center justify-between p-24">
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 w-[600px]">
-      <div className="border-2">
-        <div>
-          Project:
-          <Select
-            options={projects}
-            onChange={(value) => {
-              setProject(value?.value);
-            }}
-          />
-        </div>
-        <div>
-          Start date:
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => {
-              setStartDate(date);
-            }}
-          />
-        </div>
-        <div>
-          End date:
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => {
-              setEndDate(date);
-            }}
-          />
-        </div>
+    <main className="flex flex-col min-h-screen p-8 space-y-8">
+      <div id="controls" className="flex flex-row w-100 space-x-2">
+        <Select
+          options={projects}
+          placeholder="Project"
+          onChange={(value) => {
+            setProject(value?.value);
+          }}
+        />
+        <DatePicker
+          className="rounded p-2 border-2"
+          placeholderText="Start date"
+          showIcon
+          selected={startDate}
+          onChange={(date) => {
+            setStartDate(date);
+          }}
+        />
+        <DatePicker
+          className="rounded p-2 border-2"
+          placeholderText="End date"
+          showIcon
+          selected={endDate}
+          onChange={(date) => {
+            setEndDate(date);
+          }}
+        />
+        <button
+          className="rounded bg-red-600 px-9 py-2 text-white"
+          onClick={() => generateChart()}
+        >
+          GO
+        </button>
       </div>
-      <button
-        className="rounded bg-red-600 px-9 py-2 text-white"
-        onClick={() => generateChart()}
-      >
-        GO
-      </button>
-      <div className="border-2 w-[600px]">
-        <PieChart data={data} />
+      <div className="flex flex-row space-x-4">
+        <div className="border-2 w-[500px]">
+          <PieChart data={data} />
+        </div>
+        <div className="border-2 w-[500px] h-[300px]">
+          <DonutChart data={data} />
+        </div>
       </div>
     </main>
   );
