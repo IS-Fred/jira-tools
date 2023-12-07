@@ -9,10 +9,10 @@ const Jira = new JiraApi({
   password: process.env.JIRA_API_KEY,
 });
 
-export const CUSTOM_FIELD_NAMES = {
-  StoryPoints: "customfield_10034",
-  Classification: "customfield_10040",
-  TShirtSize: "customfield_10047",
-};
+export enum CUSTOM_FIELD_NAMES {
+  StoryPoints = "customfield_10034",
+  Classification = "customfield_10040",
+  TShirtSize = "customfield_10047",
+}
 
 export default Jira;

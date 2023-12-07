@@ -28,9 +28,10 @@ export default function DoneByClassification() {
 
   // <main className="flex min-h-screen flex-col items-center justify-between p-24">
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="w-[600px]">
-        <Jql triggerJQL={triggerJql} />
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 w-[600px]">
+      <div className="border-2"></div>
+      <Jql triggerJQL={triggerJql} />
+      <div className="border-2 w-[600px]">
         <PieChart data={data} />
       </div>
     </main>

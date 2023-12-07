@@ -62,6 +62,11 @@ export const PieChart = ({
       legend: {
         display: true,
         position: "right",
+        labels: {
+          font: {
+            size: 16,
+          },
+        },
       },
     },
   };
@@ -79,7 +84,7 @@ export const PieChart = ({
 
   return (
     <div className="">
-      <Doughnut data={pieData} options={options} height={"500px"} />
+      <Doughnut data={pieData} options={options} />
     </div>
   );
 };
