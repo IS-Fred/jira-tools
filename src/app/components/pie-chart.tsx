@@ -1,6 +1,12 @@
 "use client";
 
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  DatasetChartOptions,
+} from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -56,7 +62,7 @@ export const PieChart = ({
 }) => {
   if (!data) return;
 
-  const options = {
+  const options: any = {
     maintainAspectRatio: false,
     plugins: {
       legend: {
