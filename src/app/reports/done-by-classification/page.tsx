@@ -13,7 +13,7 @@ type SelectOptionType = {
   label: string;
 };
 
-export default function DoneByClassification() {
+export default function PointsDoneByClassification() {
   const [data, setData] = useState<any>();
   const [projects, setProjects] = useState<SelectOptionType[]>([]);
   const [project, setProject] = useState<string | undefined>();
@@ -34,7 +34,7 @@ export default function DoneByClassification() {
 
   const generateChart = async () => {
     const response = await fetch(
-      `/api/reports/done-by-classification?project=${project}&startDate=${
+      `/api/charts/points-done-by-classification?project=${project}&startDate=${
         startDate?.toISOString().split("T")[0]
       }&endDate=${endDate?.toISOString().split("T")[0]}`
     );
