@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
@@ -14,8 +13,10 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center p-24">
       <table className="border-collapse">
         <thead>
-          <th>Route</th>
-          <th>Description</th>
+          <tr>
+            <th>Route</th>
+            <th>Description</th>
+          </tr>
         </thead>
         <tbody>
           {pages.map((page) => (
