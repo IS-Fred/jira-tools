@@ -38,17 +38,53 @@ export default function Mbr() {
     fetchProjectList();
   }, []);
 
-  const generateChart = async () => {
+  const fetchChartData = async () => {
     const projectList: string[] = selectedProjects.map(
       (optionType) => optionType.value
     );
 
-    const response = await fetch(
-      `/api/charts/points-done-by-classification?projects=${projectList.join(
-        ","
-      )}&month=${reportMonth?.toISOString().split("T")[0]}`
-    );
-    // setData((await response.json()).storyPointsByClassification);
+    const [y, m] = reportMonth.toISOString().split("T")[0].split("-");
+    const currentMonthStart = new Date(+y, +m - 1, 1)
+      .toISOString()
+      .split("T")[0];
+    const currentMonthEnd = new Date(+y, +m, 0).toISOString().split("T")[0];
+    const previousMonthStart = new Date(+y, +m - 2, 1)
+      .toISOString()
+      .split("T")[0];
+    const previousMonthEnd = new Date(+y, +m - 1, 0)
+      .toISOString()
+      .split("T")[0];
+
+    let responsePromises: any[] = [];
+
+    projectList.forEach((project) => {
+      responsePromises = responsePromises.concat(
+        fetch(
+          `/api/charts/points-done-by-classification?project=${project}&startDate=${currentMonthStart}&endDate=${currentMonthEnd}`
+        ),
+        fetch(
+          `/api/charts/points-done-by-classification?project=${project}&startDate=${previousMonthStart}&endDate=${previousMonthEnd}`
+        )
+      );
+    });
+
+    const responses = await Promise.all(responsePromises);
+    const responsesJsonPromises = responses.map((response) => response.json());
+    const responsesJson = await Promise.all(responsesJsonPromises);
+
+    const results = {};
+
+    projectList.forEach((project, index) => {
+      // @ts-ignore
+      results[project] = {
+        current: responsesJson[index * 2],
+        previous: responsesJson[index * 2 + 1],
+      };
+    });
+
+    console.log("******* RESPONSES ********");
+    console.log(results);
+    setData(results);
   };
 
   return (
@@ -80,7 +116,7 @@ export default function Mbr() {
         </div>
         <button
           className="rounded bg-red-600 px-9 py-2 text-white"
-          onClick={() => generateChart()}
+          onClick={() => fetchChartData()}
         >
           GO
         </button>
