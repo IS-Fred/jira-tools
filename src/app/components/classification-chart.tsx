@@ -37,7 +37,7 @@ const pieConfig = [
   },
 ];
 
-export const DonutChart = ({
+export const ClassificationChart = ({
   data,
 }: {
   data: {
