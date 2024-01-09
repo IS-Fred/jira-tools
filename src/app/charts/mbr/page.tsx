@@ -14,6 +14,21 @@ type SelectOptionType = {
   label: string;
 };
 
+const MonthArray = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "June",
+  "July",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export default function Mbr() {
   const [data, setData] = useState<any>();
   const [projects, setProjects] = useState<MultiValue<SelectOptionType>>([]);
@@ -44,11 +59,11 @@ export default function Mbr() {
     );
 
     const [y, m] = reportMonth.toISOString().split("T")[0].split("-");
-    const currentMonthStart = new Date(+y, +m - 1, 1)
-      .toISOString()
-      .split("T")[0];
+    const currentMonthStart = new Date(+y, +m - 1, 1);
+    const currentMonthStartStr = currentMonthStart.toISOString().split("T")[0];
     const currentMonthEnd = new Date(+y, +m, 0).toISOString().split("T")[0];
-    const previousMonthStart = new Date(+y, +m - 2, 1)
+    const previousMonthStart = new Date(+y, +m - 2, 1);
+    const previousMonthStartStr = previousMonthStart
       .toISOString()
       .split("T")[0];
     const previousMonthEnd = new Date(+y, +m - 1, 0)
@@ -60,10 +75,10 @@ export default function Mbr() {
     projectList.forEach((project) => {
       responsePromises = responsePromises.concat(
         fetch(
-          `/api/charts/points-done-by-classification?project=${project}&startDate=${currentMonthStart}&endDate=${currentMonthEnd}`
+          `/api/charts/points-done-by-classification?project=${project}&startDate=${currentMonthStartStr}&endDate=${currentMonthEnd}`
         ),
         fetch(
-          `/api/charts/points-done-by-classification?project=${project}&startDate=${previousMonthStart}&endDate=${previousMonthEnd}`
+          `/api/charts/points-done-by-classification?project=${project}&startDate=${previousMonthStartStr}&endDate=${previousMonthEnd}`
         )
       );
     });
@@ -77,8 +92,16 @@ export default function Mbr() {
     projectList.forEach((project, index) => {
       // @ts-ignore
       results[project] = {
-        current: responsesJson[index * 2],
-        previous: responsesJson[index * 2 + 1],
+        current: {
+          month: MonthArray[currentMonthStart.getMonth()],
+          storyPointsByClassification:
+            responsesJson[index * 2].storyPointsByClassification,
+        },
+        previous: {
+          month: MonthArray[previousMonthStart.getMonth()],
+          storyPointsByClassification:
+            responsesJson[index * 2 + 1].storyPointsByClassification,
+        },
       };
     });
 
@@ -121,6 +144,41 @@ export default function Mbr() {
           GO
         </button>
       </div>
+      {data &&
+        selectedProjects.map((project) => (
+          <div className="flex flex-col" key={project.value}>
+            <div className="w-[1000px] text-center font-bold text-2xl pt-4 border-t-2">
+              {project.label}
+            </div>
+            <div className="flex flex-row">
+              <div className="flex flex-col">
+                <div className="font-bold text-center">
+                  {data[project.value]["previous"].month}
+                </div>
+                <div className="w-[500px] h-[200px] border-r-2">
+                  <ClassificationChart
+                    data={
+                      data[project.value]["previous"]
+                        .storyPointsByClassification
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <div className="font-bold text-center">
+                  {data[project.value]["current"].month}
+                </div>
+                <div className="w-[500px] h-[200px]">
+                  <ClassificationChart
+                    data={
+                      data[project.value]["current"].storyPointsByClassification
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
     </main>
   );
 }
