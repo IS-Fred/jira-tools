@@ -15,18 +15,18 @@ type SelectOptionType = {
 };
 
 const MonthArray = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
+  "January",
+  "February",
+  "March",
+  "April",
   "May",
   "June",
   "July",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 export default function Mbr() {
