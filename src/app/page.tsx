@@ -7,6 +7,11 @@ export default function Home() {
       description:
         "Pie chart displaying the proportion of story points for completed tickets by classification for a given period of time.",
     },
+    {
+      route: "/charts/mbr",
+      description:
+        "Pie charts used in the MBR indicating the proportion of story points completed by classification for the previous and current month.",
+    },
   ];
 
   return (

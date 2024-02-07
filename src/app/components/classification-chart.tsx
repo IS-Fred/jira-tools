@@ -13,7 +13,7 @@ const pieConfig = [
   {
     type: "Product",
     label: "Product",
-    color: "hsl(288, 50%, 50%)",
+    color: "hsl(144, 33%, 33%)",
   },
   {
     type: "Tech debt",
@@ -33,11 +33,11 @@ const pieConfig = [
   {
     type: "Compliance",
     label: "Compliance",
-    color: "hsl(144, 50%, 50%)",
+    color: "hsl(288, 50%, 50%)",
   },
 ];
 
-export const DonutChart = ({
+export const ClassificationChart = ({
   data,
 }: {
   data: {

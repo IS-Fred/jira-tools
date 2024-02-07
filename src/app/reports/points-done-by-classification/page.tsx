@@ -2,7 +2,7 @@
 
 import Select from "react-select";
 
-import { DonutChart } from "@/app/components/donut-chart";
+import { ClassificationChart } from "@/app/components/classification-chart";
 import { PieChart } from "@/app/components/pie-chart";
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
@@ -83,7 +83,7 @@ export default function PointsDoneByClassification() {
           <PieChart data={data} />
         </div>
         <div className="border-2 w-[500px] h-[300px]">
-          <DonutChart data={data} />
+          <ClassificationChart data={data} />
         </div>
       </div>
     </main>
