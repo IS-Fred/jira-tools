@@ -19,9 +19,11 @@ type StoryResultType = {
   fields: {
     summary: string;
     [CUSTOM_FIELD_NAMES.StoryPoints]: number;
-    [CUSTOM_FIELD_NAMES.Classification]: {
-      value: "Product" | "Tech debt" | "Support" | "Compliance" | "Bug";
-    };
+    [CUSTOM_FIELD_NAMES.Classification]:
+      | {
+          value: "Product" | "Tech debt" | "Support" | "Compliance";
+        }
+      | undefined;
   };
 };
 
@@ -34,6 +36,9 @@ type BugResultType = {
   fields: {
     summary: string;
     [CUSTOM_FIELD_NAMES.StoryPoints]: number;
+    [CUSTOM_FIELD_NAMES.Classification]: {
+      value: "Product" | "Tech debt" | "Support" | "Compliance";
+    };
   };
 };
 
@@ -56,9 +61,9 @@ export async function GET(req: NextRequest) {
     Bug: 0,
   };
 
-  const project = searchParams.get("project") || TMP_PROJECT;
-  const startDate = searchParams.get("startDate") || TMP_START_DATE;
-  const endDate = searchParams.get("endDate") || TMP_END_DATE;
+  const project = searchParams.get("project") ?? TMP_PROJECT;
+  const startDate = searchParams.get("startDate") ?? TMP_START_DATE;
+  const endDate = searchParams.get("endDate") ?? TMP_END_DATE;
 
   if (!project || !startDate || !endDate) {
     return NextResponse.json(
@@ -105,8 +110,14 @@ export async function GET(req: NextRequest) {
         return;
       }
 
-      storyPointsByClassification["Bug"] +=
-        bug.fields[CUSTOM_FIELD_NAMES.StoryPoints];
+      if (bug.fields[CUSTOM_FIELD_NAMES.Classification]) {
+        storyPointsByClassification[
+          bug.fields[CUSTOM_FIELD_NAMES.Classification].value
+        ] += bug.fields[CUSTOM_FIELD_NAMES.StoryPoints];
+      } else {
+        storyPointsByClassification["Bug"] +=
+          bug.fields[CUSTOM_FIELD_NAMES.StoryPoints];
+      }
     });
 
     return NextResponse.json(
