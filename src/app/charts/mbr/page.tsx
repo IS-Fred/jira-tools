@@ -155,7 +155,7 @@ export default function Mbr() {
                 <div className="font-bold text-center">
                   {data[project.value]["previous"].month}
                 </div>
-                <div className="w-[500px] h-[200px] border-r-2">
+                <div className="w-[500px] h-[300px] border-r-2">
                   <ClassificationChart
                     data={
                       data[project.value]["previous"]
@@ -168,7 +168,7 @@ export default function Mbr() {
                 <div className="font-bold text-center">
                   {data[project.value]["current"].month}
                 </div>
-                <div className="w-[500px] h-[200px]">
+                <div className="w-[500px] h-[300px]">
                   <ClassificationChart
                     data={
                       data[project.value]["current"].storyPointsByClassification
