@@ -110,7 +110,9 @@ export async function GET(req: NextRequest) {
         return;
       }
 
-      if (bug.fields[CUSTOM_FIELD_NAMES.Classification]) {
+      if ( bug.fields[CUSTOM_FIELD_NAMES.Classification] &&
+        bug.fields[CUSTOM_FIELD_NAMES.Classification]?.value !== "Tech debt"
+      ) {
         storyPointsByClassification[
           bug.fields[CUSTOM_FIELD_NAMES.Classification].value
         ] += bug.fields[CUSTOM_FIELD_NAMES.StoryPoints];
